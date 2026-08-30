@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>刀剣学習帳 Ver.3</title>
+<style>
+:root{--bg:#111417;--panel:#202529;--panel2:#2a3035;--line:#4a4f54;--gold:#d6b96d;--ink:#f7f2e7;--muted:#bcb8af;--purple:#6c4b82;--green:#557b60;--red:#764846}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent} body{margin:0;background:radial-gradient(circle at 15% 0,#312735 0,#111417 38%),#111417;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}
+header{padding:22px 14px 15px;text-align:center;background:linear-gradient(#0d1012,#22272b);border-bottom:1px solid #3d4246} header h1{margin:0;font-size:25px;letter-spacing:2px} header p{margin:7px 0 0;font-size:12px;color:var(--muted)}
+nav{position:sticky;top:0;z-index:20;display:flex;gap:7px;overflow:auto;padding:8px;background:#0c0e10;border-bottom:1px solid #3c4145} nav button{flex:0 0 auto;border:1px solid #555b5f;background:#252a2e;color:#e8e2d9;padding:10px 13px;border-radius:9px;font-weight:700} nav button.active{background:var(--gold);color:#171717}
+main{max-width:780px;margin:auto;padding:12px 12px 40px}.page{display:none}.page.active{display:block}.panel{background:linear-gradient(145deg,#242a2f,#1a1e21);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 8px 24px #0005} h2{margin:0 0 10px;font-size:19px} h3{margin:0 0 6px}.muted{color:var(--muted);font-size:12px;line-height:1.7}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.btn{width:100%;border:1px solid #61676b;border-radius:10px;padding:12px;background:#333a3f;color:#fff;font-weight:800}.btn.gold{background:#b69443;color:#171717;border-color:#e4c875}.btn.purple{background:#4d365d}.btn:active{transform:scale(.98)}
+.stat{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #3b4145;font-size:13px}.stat:last-child{border:0}.bar{height:10px;background:#0d0f10;border:1px solid #45494b;border-radius:99px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#9b742e,#ecd586);transition:.4s}.koban,.stamp{color:#e6c774;font-weight:900}
+.banner{display:flex;gap:13px;align-items:center;justify-content:space-between;padding:13px;border-radius:14px;background:linear-gradient(135deg,#2b3136,#1c2023);border:1px solid #50575b}.tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#3a4146;font-size:10px;margin:2px}.stage,.card,.review{border:1px solid #4b5357;border-radius:12px;padding:13px;margin:8px 0;background:#272d31}.stage.locked{opacity:.42}.summary{background:#171a1d;border:1px solid #484d51;border-radius:12px;padding:12px;margin:9px 0}.summary ul{margin:7px 0 0;padding-left:20px;line-height:1.7;font-size:13px}.mini{display:flex;align-items:center;gap:10px}.portrait{width:72px;height:72px;flex:0 0 auto}.portrait svg{width:100%;height:100%;display:block}.detail{display:grid;grid-template-columns:86px 1fr;gap:12px}.notice{padding:11px;border-left:3px solid var(--gold);background:#252a2e;color:#dcd7cf;font-size:12px;line-height:1.75}.choice{width:100%;text-align:left;border:1px solid #555d61;border-radius:10px;padding:12px;margin:5px 0;background:#30363b;color:white;font-size:14px}.choice.correct{background:#41624a;border-color:#7ea987}.choice.wrong{background:#653b38;border-color:#bf7c75}.result{text-align:center;font-size:31px;font-weight:900;color:#dfc67e}.toggle{appearance:none;width:47px;height:27px;border-radius:30px;background:#41474b;position:relative;border:1px solid #60676b}.toggle:checked{background:#8e7438}.toggle:before{content:"";position:absolute;width:21px;height:21px;background:#fff;border-radius:50%;top:2px;left:2px;transition:.2s}.toggle:checked:before{left:22px}.toggleRow{display:flex;justify-content:space-between;align-items:center;margin:7px 0}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.detail{grid-template-columns:76px 1fr}header h1{font-size:23px}}
+</style>
+</head>
+<body>
+<header><h1>⚔️ 刀剣学習帳 Ver.3</h1><p>中学 → 高校先取り × 5教科 × 学習RPG</p></header>
+<nav><button class="active" onclick="show('home',this)">🏯 本丸</button><button onclick="show('missions',this)">⚔️ 出陣</button><button onclick="show('materials',this)">📚 教材</button><button onclick="show('swords',this)">🗡️ 刀帳</button><button onclick="show('people',this)">👤 人物帳</button><button onclick="show('stats',this)">📊 成績</button></nav>
+<main>
+<section id="home" class="page active">
+  <div class="banner"><div><span class="tag">今日の本丸</span><h2 style="margin:4px 0">少しずつ、毎日。</h2><div class="muted">「理解 → 思い出す → 復習」を繰り返して定着させよう。</div></div><div style="font-size:45px">🏯</div></div>
+  <div class="panel"><div class="stat"><span>審神者レベル</span><b id="level">1</b></div><div class="stat"><span>歴史経験値</span><b><span id="xp">0</span> / <span id="nextxp">100</span></b></div><div class="bar"><div class="fill" id="xpfill"></div></div><div class="stat"><span>小判</span><b class="koban" id="koban">300</b></div><div class="stat"><span>戦績ランク</span><b class="stamp" id="rank">E</b></div><div class="stat"><span>連続学習</span><b id="streak">0日</b></div></div>
+  <div class="panel"><h2>📜 今日の任務</h2><div id="dailyTasks"></div><button class="btn gold" onclick="startDaily()">🔥 今日の5教科任務を開始</button></div>
+  <div class="panel"><h2>🧠 復習待ち</h2><div id="reviewBox"></div></div>
+  <div class="panel"><h2>🔊 音設定</h2><div class="toggleRow"><span>効果音</span><input id="sfx" class="toggle" type="checkbox" checked></div><div class="toggleRow"><span>簡易BGM（タップ開始）</span><input id="bgm" class="toggle" type="checkbox"></div><div class="muted">iPhone/Safariはユーザー操作後に音を開始。音量は端末側で調整。</div></div>
+</section>
+<section id="missions" class="page"><div class="panel"><h2>🗺️ 出陣マップ</h2><p class="muted">要点まとめ → 問題 → 解説 → 報酬。クリアで次の時代を解放。</p><div id="stageList"></div></div></section>
+<section id="battle" class="page"><div class="panel"><span class="tag" id="battleTag"></span><h2 id="battleTitle"></h2><div id="battleContent"></div></div></section>
+<section id="materials" class="page"><div class="panel"><h2>📚 教材</h2><p class="muted">5教科を少しずつ。各教科に中学→高校基礎の入口を用意。</p><div id="subjectList"></div></div></section>
+<section id="swords" class="page">
+<div class="panel">
+<h2>🗡️ 刀帳 <span id="swordCount" class="stamp"></span></h2>
+<p class="muted">現在の刀剣男士をまとめた全振り刀帳。立ち絵はこの学習アプリ用のオリジナル・ミニイラストです。</p>
+<div class="grid" style="margin-bottom:10px">
+<input id="swordSearch" placeholder="🔎 刀剣男士を検索" style="padding:12px;border-radius:10px;border:1px solid #555;background:#171a1d;color:#fff">
+<select id="swordType" style="padding:12px;border-radius:10px;border:1px solid #555;background:#171a1d;color:#fff">
+<option value="">刀種：すべて</option>
+<option>短刀</option><option>脇差</option><option>打刀</option><option>太刀</option><option>大太刀</option><option>槍</option><option>薙刀</option><option>剣</option>
+</select>
+</div>
+<div class="notice">📌 史実メモは「刀工・刀派・伝来・所蔵・逸話」を分けて確認できる設計にしています。詳細な人物・由来は今後の更新でさらに追加できます。</div>
+<div id="swordList"></div>
+</div>
+</section>
+<section id="people" class="page"><div class="panel"><h2>👤 人物帳</h2><p class="muted">「いつ」「何をした人か」を一言で覚える。</p><div id="peopleList"></div></div></section>
+<section id="stats" class="page"><div class="panel"><h2>📊 成績</h2><div id="statsList"></div></div><div class="panel"><h2>🏆 実績</h2><div id="achievements"></div></div></section>
+</main>
+<script>
+const subjects=[['社会','📜','歴史・地理・公民'],['数学','📐','中学→高校基礎'],['英語','🇬🇧','単語・文法'],['理科','🔬','物理・化学・生物・地学'],['国語','📖','漢字・文法・古文・漢文']];
+const people=[['聖徳太子','飛鳥','冠位十二階・十七条の憲法・遣隋使','#b68c45'],['源頼朝','鎌倉','鎌倉幕府を開く','#9b6a56'],['織田信長','安土桃山','楽市楽座などを進め、天下統一を目指した','#7d5a92'],['豊臣秀吉','安土桃山','全国統一を完成。検地・刀狩を実施','#a9823c'],['徳川家康','江戸','江戸幕府を開く','#5d7691'],['徳川吉宗','江戸','享保の改革','#4e7d62'],['土方歳三','幕末','新選組副長として活動','#4a6d7b'],['西郷隆盛','明治','明治維新で活躍','#806a53']];
+const swords=[['三日月宗近','平安','三条宗近','平安時代の刀工・三条宗近の作とされる。','平安の刀工文化'],['燭台切光忠','戦国〜江戸','光忠（長船派）','伊達家伝来の刀として知られる。','戦国大名と家のつながり'],['実休光忠','戦国','光忠（長船派）','名は三好実休とのつながりから付けられたとされる。','戦国大名と刀'],['和泉守兼定','幕末','兼定','土方歳三が愛用したとされる刀として知られる。','幕末・新選組'],['堀川国広','安土桃山','堀川国広','安土桃山時代の刀工・堀川国広の作として知られる脇差。','刀工と幕末'],['大倶利伽羅','江戸まで','相州伝・広光作とされる','伊達家伝来。倶利伽羅竜王の彫り物がある。','大名家と伝来'],['山姥切国広','安土桃山','堀川国広','霊剣「山姥切」を模して造られたとされる打刀。','刀工と伝承'],['篭手切江','中世〜近世','江の刀工系','脇差。刀工・伝来・所蔵者を分けて学ぶ。','刀工・刀派・伝来']];
+const stage=[
+['asuka','飛鳥','大陸交流と中央集権化',['聖徳太子','冠位十二階','十七条の憲法','遣隋使'],'飛鳥＝大陸交流＋政治の整備','東アジア世界との外交へ',[['聖徳太子が定めたとされるものは？',['十七条の憲法','御成敗式目','武家諸法度','五箇条の御誓文'],0],['隋に派遣された使節は？',['遣唐使','遣隋使','遣明使','朱印船'],1],['飛鳥時代の政治で重要な人物は？',['聖徳太子','徳川家康','伊藤博文','足利義満'],0]]],
+['nara','奈良','律令国家と仏教',['平城京','聖武天皇','東大寺','大仏'],'奈良＝平城京＋律令＋大仏','律令国家と国家による仏教保護',[['奈良時代の都は？',['平城京','平安京','鎌倉','江戸'],0],['聖武天皇が建立を進めた寺は？',['東大寺','金閣','延暦寺','中尊寺'],0],['奈良の大仏がある寺は？',['東大寺','法隆寺','清水寺','金閣寺'],0]]],
+['heian','平安','貴族政治と武士の成長',['平安京','摂関政治','院政','平清盛'],'平安＝貴族政治→武士の成長','権力の担い手の変化',[['794年に都が移された場所は？',['平安京','平城京','長岡京','鎌倉'],0],['摂関政治で栄えた一族は？',['藤原氏','源氏','北条氏','徳川氏'],0],['平氏政権を築いた人物は？',['平清盛','源頼朝','足利尊氏','豊臣秀吉'],0]]],
+['kamakura','鎌倉','武士の政権と元寇',['源頼朝','鎌倉幕府','御恩と奉公','元寇'],'鎌倉＝武士・御恩と奉公・元寇','幕府と御家人の関係',[['鎌倉幕府を開いた人物は？',['源頼朝','足利尊氏','織田信長','徳川家康'],0],['将軍と御家人の関係を表す言葉は？',['御恩と奉公','楽市楽座','班田収授','参勤交代'],0],['1274年の元寇は？',['文永の役','弘安の役','応仁の乱','承久の乱'],0]]],
+['muromachi','室町','室町幕府と戦国の始まり',['足利尊氏','足利義満','日明貿易','応仁の乱'],'室町＝足利＋日明貿易＋応仁の乱','幕府の弱体化と戦国大名',[['室町幕府を開いた人物は？',['足利尊氏','源頼朝','織田信長','徳川家康'],0],['日明貿易で使われた証明札は？',['勘合','朱印状','御成敗式目','刀狩令'],0],['応仁の乱の後に広がった時代は？',['戦国時代','奈良時代','飛鳥時代','明治時代'],0]]],
+['momoyama','安土桃山','天下統一',['織田信長','楽市楽座','豊臣秀吉','検地・刀狩'],'信長→秀吉→全国統一','戦国大名の統合と秀吉の支配',[['楽市楽座を進めた人物は？',['織田信長','徳川家康','源頼朝','北条時宗'],0],['全国統一を完成させた人物は？',['豊臣秀吉','足利義満','平清盛','西郷隆盛'],0],['豊臣秀吉が行った政策は？',['刀狩','参勤交代','廃藩置県','学制'],0]]],
+['edo','江戸','幕藩体制と改革',['徳川家康','参勤交代','鎖国','三大改革'],'江戸＝幕藩体制＋参勤交代＋改革','将軍と大名・農民・町人の関係',[['江戸幕府を開いた人物は？',['徳川家康','徳川吉宗','豊臣秀吉','織田信長'],0],['大名を江戸と領地に交代で住まわせた制度は？',['参勤交代','班田収授','御恩と奉公','廃藩置県'],0],['享保の改革を行った将軍は？',['徳川吉宗','徳川家康','徳川慶喜','徳川綱吉'],0]]],
+['bakumatsu','幕末〜明治','幕府の終わりと近代国家',['大政奉還','明治維新','廃藩置県','文明開化'],'幕末→維新→近代国家','政治変動と制度改革',[['江戸幕府が政権を朝廷に返したことは？',['大政奉還','廃藩置県','版籍奉還','文明開化'],0],['藩を廃止して府県を置いた改革は？',['廃藩置県','地租改正','徴兵令','学制'],0],['新選組副長として知られる人物は？',['土方歳三','伊藤博文','大久保利通','西郷隆盛'],0]]]
+];
+const q5={社会:[['794年に都が移された場所は？',['平城京','平安京','鎌倉','江戸'],1],['日本国憲法の基本原理の一つは？',['国民主権','世襲制','身分制','鎖国'],0]],数学:[['x²+5x+6 は？',['(x+1)(x+6)','(x+2)(x+3)','(x-2)(x-3)','(x+5)(x+1)'],1],['2x+4=10 の x は？',['2','3','4','5'],1]],英語:[['「私は昨日勉強しました」は？',['I study yesterday.','I studied yesterday.','I studies yesterday.','I am study yesterday.'],1],['「彼は今、本を読んでいます。」は？',['He reads a book now.','He is reading a book now.','He read a book now.','He reading a book now.'],1]],理科:[['光合成で植物が主に利用する気体は？',['酸素','二酸化炭素','水素','窒素'],1],['電流の単位は？',['V','A','W','Ω'],1]],国語:[['「美しい」は何詞？',['名詞','動詞','形容詞','副詞'],2],['「けり」は古文で主に？',['過去・詠嘆','推量','打消','可能'],0]]};
+const FULL_ROSTER=[['今剣', '短刀'], ['平野藤四郎', '短刀'], ['厚藤四郎', '短刀'], ['後藤藤四郎', '短刀'], ['信濃藤四郎', '短刀'], ['前田藤四郎', '短刀'], ['秋田藤四郎', '短刀'], ['博多藤四郎', '短刀'], ['乱藤四郎', '短刀'], ['五虎退', '短刀'], ['薬研藤四郎', '短刀'], ['包丁藤四郎', '短刀'], ['愛染国俊', '短刀'], ['太鼓鐘貞宗', '短刀'], ['小夜左文字', '短刀'], ['不動行光', '短刀'], ['毛利藤四郎', '短刀'], ['謙信景光', '短刀'], ['日向正宗', '短刀'], ['北谷菜切', '短刀'], ['太閤左文字', '短刀'], ['京極正宗', '短刀'], ['九鬼正宗', '短刀'], ['倶利伽羅江', '短刀'], ['にっかり青江', '脇差'], ['鯰尾藤四郎', '脇差'], ['骨喰藤四郎', '脇差'], ['物吉貞宗', '脇差'], ['堀川国広', '脇差'], ['浦島虎徹', '脇差'], ['篭手切江', '脇差'], ['肥前忠広', '脇差'], ['治金丸', '脇差'], ['泛塵', '脇差'], ['火車切', '脇差'], ['鳴狐', '打刀'], ['千子村正', '打刀'], ['亀甲貞宗', '打刀'], ['宗三左文字', '打刀'], ['加州清光', '打刀'], ['大和守安定', '打刀'], ['歌仙兼定', '打刀'], ['和泉守兼定', '打刀'], ['陸奥守吉行', '打刀'], ['山姥切国広', '打刀'], ['蜂須賀虎徹', '打刀'], ['長曽祢虎徹', '打刀'], ['大倶利伽羅', '打刀'], ['へし切長谷部', '打刀'], ['同田貫正国', '打刀'], ['南泉一文字', '打刀'], ['山姥切長義', '打刀'], ['豊前江', '打刀'], ['南海太郎朝尊', '打刀'], ['桑名江', '打刀'], ['水心子正秀', '打刀'], ['源清麿', '打刀'], ['松井江', '打刀'], ['地蔵行平', '打刀'], ['五月雨江', '打刀'], ['村雲江', '打刀'], ['稲葉江', '打刀'], ['石田正宗', '打刀'], ['孫六兼元', '打刀'], ['後家兼光', '打刀'], ['富田江', '打刀'], ['大慶直胤', '打刀'], ['安宅切', '打刀'], ['二筋樋貞宗', '打刀'], ['雲重', '打刀'], ['童子切安綱 剥落', '太刀'], ['三日月宗近', '太刀'], ['小狐丸', '太刀'], ['大典太光世', '太刀'], ['ソハヤノツルキ', '太刀'], ['数珠丸恒次', '太刀'], ['鬼丸国綱', '太刀'], ['一期一振', '太刀'], ['大包平', '太刀'], ['鶯丸', '太刀'], ['明石国行', '太刀'], ['燭台切光忠', '太刀'], ['大般若長光', '太刀'], ['小竜景光', '太刀'], ['江雪左文字', '太刀'], ['山伏国広', '太刀'], ['髭切', '太刀'], ['膝丸', '太刀'], ['獅子王', '太刀'], ['小烏丸', '太刀'], ['抜丸', '太刀'], ['鶴丸国永', '太刀'], ['小豆長光', '太刀'], ['千代金丸', '太刀'], ['山鳥毛', '太刀'], ['古今伝授の太刀', '太刀'], ['日光一文字', '太刀'], ['一文字則宗', '太刀'], ['姫鶴一文字', '太刀'], ['福島光忠', '太刀'], ['笹貫', '太刀'], ['八丁念仏', '太刀'], ['実休光忠', '太刀'], ['雲生', '太刀'], ['道誉一文字', '太刀'], ['雲次', '太刀'], ['面影', '太刀'], ['古備前信房', '太刀'], ['三郎国宗', '太刀'], ['波平行安', '太刀'], ['狐ヶ崎為次', '太刀'], ['石切丸', '大太刀'], ['蛍丸', '大太刀'], ['太郎太刀', '大太刀'], ['次郎太刀', '大太刀'], ['祢々切丸', '大太刀'], ['柏太刀', '大太刀'], ['蜻蛉切', '槍'], ['日本号', '槍'], ['御手杵', '槍'], ['大千鳥十文字槍', '槍'], ['人間無骨', '槍'], ['岩融', '薙刀'], ['巴形薙刀', '薙刀'], ['静形薙刀', '薙刀'], ['白山吉光', '剣'], ['七星剣', '剣'], ['丙子椒林剣', '剣']];
+let state=JSON.parse(localStorage.getItem('toukenStudyV3')||'null')||{xp:0,koban:300,cleared:[],streak:0,last:'',review:[],stats:{社会:[0,0],数学:[0,0],英語:[0,0],理科:[0,0],国語:[0,0]},ach:[]};
+let ctx=null,bgmTimer=null,battle=null,qi=0,score=0;
+function save(){localStorage.setItem('toukenStudyV3',JSON.stringify(state));renderHome()}
+function audio(){if(!ctx)ctx=new (window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume()}
+function tone(f=660,d=.09,vol=.04){if(!document.getElementById('sfx').checked)return;audio();let o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=f;g.gain.value=vol;o.connect(g);g.connect(ctx.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+d);o.stop(ctx.currentTime+d)}
+function show(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');if(id==='missions')renderStages();if(id==='materials')renderSubjects();if(id==='swords')renderSwords();if(id==='people')renderPeople();if(id==='stats')renderStats();window.scrollTo({top:0,behavior:'smooth'})}
+function level(){return Math.floor(state.xp/100)+1} function rank(){return state.xp>=700?'S+':state.xp>=500?'S':state.xp>=350?'A':state.xp>=200?'B':state.xp>=80?'C':'E'}
+function renderHome(){let n=level()*100,p=(level()-1)*100;levelEl('level',level());levelEl('xp',state.xp);levelEl('nextxp',n);document.getElementById('xpfill').style.width=Math.min(100,(state.xp-p)/(n-p)*100)+'%';levelEl('koban',state.koban);levelEl('rank',rank());levelEl('streak',state.streak+'日');document.getElementById('sfx').checked=state.sfx!==false;document.getElementById('bgm').checked=!!state.bgm;let today=new Date().toISOString().slice(0,10),done=state.last===today;document.getElementById('dailyTasks').innerHTML=subjects.map(s=>`<div class="stat"><span>${s[1]} ${s[0]}</span><b>${done?'達成':'5問'}</b></div>`).join('');let due=state.review.filter(r=>r.date<=Date.now()).slice(0,4);document.getElementById('reviewBox').innerHTML=due.length?due.map((r,i)=>`<div class="review"><b>${r.subject}</b>：${r.label}<button class="btn" style="margin-top:6px" onclick="review(${i})">復習する</button></div>`).join(''):'<div class="muted">今は復習待ちなし。新しい任務へ！</div>'}
+function levelEl(id,v){document.getElementById(id).textContent=v}
+document.getElementById('sfx').addEventListener('change',e=>{state.sfx=e.target.checked;save()});document.getElementById('bgm').addEventListener('change',e=>{state.bgm=e.target.checked;if(e.target.checked){audio();clearInterval(bgmTimer);let ns=[220,277,330,277],i=0;bgmTimer=setInterval(()=>tone(ns[i++%ns.length],.07,.012),800)}else{clearInterval(bgmTimer);bgmTimer=null}save()});
+function renderStages(){document.getElementById('stageList').innerHTML=stage.map((s,i)=>{let unlocked=i===0||state.cleared.includes(stage[i-1][0]),cleared=state.cleared.includes(s[0]);return `<div class="stage ${unlocked?'':'locked'}"><span class="tag">${s[1]}</span><span class="tag">${cleared?'攻略済み':'未攻略'}</span><h3>${s[2]}</h3><div class="muted">要点：${s[3].join(' / ')}</div><div class="muted">報酬：経験値 ${45+i*5}　小判 ${50+i*10}</div><button class="btn ${unlocked?'gold':''}" style="margin-top:8px" ${unlocked?`onclick="startStage(${i})"`:'disabled'}>${unlocked?'⚔️ 出陣':'🔒 未開放'}</button></div>`}).join('')}
+function startStage(i){battle={type:'history',i};qi=0;score=0;document.getElementById('battleTag').textContent=stage[i][1];document.getElementById('battleTitle').textContent='⚔️ '+stage[i][2];show('battle');renderHistory()}
+function renderHistory(){let s=stage[battle.i];if(qi===0){document.getElementById('battleContent').innerHTML=`<div class="mini"><div class="portrait">${portrait(s[3][0],'#b68c45')}</div><div><b>📜 30秒まとめ</b><div class="muted">まず全体の流れをつかもう。</div></div></div><div class="summary"><b>これだけ覚える</b><ul>${s[3].map(x=>`<li>${x}</li>`).join('')}</ul></div><div class="notice"><b>🧠 暗記フレーズ</b><br>${s[4]}</div><div class="summary"><b>🎓 高校先取り</b><br><span class="muted">${s[5]}</span></div><button class="btn gold" onclick="qi=1;renderHistory()">⚔️ いざ出陣！（問題へ）</button>`;return}let q=s[6][qi-1];document.getElementById('battleContent').innerHTML=`<p class="muted">第${qi} / ${s[6].length}問</p><h3>${q[0]}</h3>${q[1].map((a,j)=>`<button class="choice" onclick="answerHistory(${j},this)">${a}</button>`).join('')}`}
+function answerHistory(a,btn){let q=stage[battle.i][6][qi-1],bs=document.querySelectorAll('.choice');bs.forEach(x=>x.disabled=true);if(a===q[2]){btn.classList.add('correct');score++;tone(740,.1)}else{btn.classList.add('wrong');bs[q[2]].classList.add('correct');tone(180,.14,.035)}setTimeout(()=>{qi++;if(qi<=stage[battle.i][6].length)renderHistory();else finishHistory()},650)}
+function finishHistory(){let s=stage[battle.i],first=!state.cleared.includes(s[0]),ratio=score/s[6].length,gain=(first?(45+battle.i*5):0)+(ratio===1?25:ratio>=.66?15:5),coins=first?50+battle.i*10:10;state.xp+=gain;state.koban+=coins;if(first)state.cleared.push(s[0]);state.stats.社会[0]+=score;state.stats.社会[1]+=s[6].length;schedule('社会',s[2]);setStreak();ach();save();tone(523,.09);setTimeout(()=>tone(659,.09),100);setTimeout(()=>tone(784,.14),210);let r=ratio===1?'S':ratio>=.66?'A':ratio>=.33?'B':'C';document.getElementById('battleContent').innerHTML=`<div class="result">完全勝利 ${r}！</div><p style="text-align:center">正解 ${score} / ${s[6].length}</p><div class="stat"><span>獲得経験値</span><b>+${gain}</b></div><div class="stat"><span>獲得小判</span><b class="koban">+${coins}</b></div><div class="summary"><b>📖 もう一度覚える</b><br><span class="muted">${s[4]}<br>${s[5]}</span></div><button class="btn gold" onclick="show('missions',document.querySelectorAll('nav button')[1])">🗺️ 出陣先へ戻る</button>`}
+function schedule(subject,label){[1,3,7].forEach(d=>state.review.push({subject,label,date:Date.now()+d*86400000,id:Math.random().toString(36).slice(2)}))}
+function setStreak(){let t=new Date().toISOString().slice(0,10);if(!state.last)state.streak=1;else if(state.last!==t){let a=new Date(state.last),b=new Date(t),d=Math.round((b-a)/86400000);state.streak=d===1?state.streak+1:1}state.last=t}
+function ach(){let add=(n,c)=>{if(c&&!state.ach.includes(n))state.ach.push(n)};add('初陣突破',state.cleared.length>=1);add('三時代攻略',state.cleared.length>=3);add('歴史の達人',state.cleared.length>=8);add('五教科出陣',Object.values(state.stats).every(x=>x[1]>0));add('連続学習7日',state.streak>=7)}
+function renderSubjects(){document.getElementById('subjectList').innerHTML=subjects.map(s=>`<div class="card"><div class="mini"><div style="font-size:31px;width:45px;text-align:center">${s[1]}</div><div style="flex:1"><h3>${s[0]}</h3><div class="muted">${s[2]}</div></div><button class="btn purple" style="width:auto" onclick="startSubject('${s[0]}')">学ぶ</button></div></div>`).join('')}
+function startSubject(sub){let qs=q5[sub],i=0,sc=0;document.getElementById('battleTag').textContent=sub;document.getElementById('battleTitle').textContent='📚 '+sub+'・ミニ任務';show('battle');function draw(){if(i>=qs.length){let gain=20+sc*5;state.xp+=gain;state.koban+=25;state.stats[sub][0]+=sc;state.stats[sub][1]+=qs.length;schedule(sub,'ミニ任務');setStreak();ach();save();document.getElementById('battleContent').innerHTML=`<div class="result">${sc} / ${qs.length}</div><p style="text-align:center">経験値 +${gain}　小判 +25</p><button class="btn gold" onclick="show('materials',document.querySelectorAll('nav button')[2])">教材へ戻る</button>`;return}let q=qs[i];document.getElementById('battleContent').innerHTML=`<p class="muted">第${i+1} / ${qs.length}問</p><h3>${q[0]}</h3>${q[1].map((a,j)=>`<button class="choice" onclick="pick(${j},this)">${a}</button>`).join('')}`};window.pick=(a,btn)=>{let q=qs[i],bs=document.querySelectorAll('.choice');bs.forEach(x=>x.disabled=true);if(a===q[2]){btn.classList.add('correct');sc++;tone(740,.1)}else{btn.classList.add('wrong');bs[q[2]].classList.add('correct');tone(180,.14,.035)}setTimeout(()=>{i++;draw()},600)};draw()}
+function review(i){let r=state.review.filter(x=>x.date<=Date.now())[i];if(!r)return;let q=(q5[r.subject]||q5.社会)[0],ans=prompt(r.subject+'\n'+q[0]+'\n\n'+q[1].map((x,j)=>(j+1)+'：'+x).join('\n')+'\n\n番号を入力');if(Number(ans)-1===q[2]){state.xp+=15;state.koban+=10;tone(740,.1)}else tone(180,.14,.035);state.stats[r.subject][1]++;state.review=state.review.filter(x=>x.id!==r.id);setStreak();ach();save();alert('復習完了！')}
+function portrait(name,c){return `<svg viewBox="0 0 120 120" aria-label="${name}のミニイラスト"><rect x="4" y="4" width="112" height="112" rx="26" fill="#171a1d" stroke="${c}" stroke-width="4"/><circle cx="60" cy="47" r="22" fill="#f0c7a5"/><path d="M38 41 Q60 13 82 41 Q70 31 49 37 Q43 40 38 41Z" fill="#202328"/><circle cx="52" cy="48" r="3" fill="#222"/><circle cx="68" cy="48" r="3" fill="#222"/><path d="M52 60 Q60 66 68 60" fill="none" stroke="#7a4e43" stroke-width="2"/><path d="M28 103 Q31 72 60 72 Q89 72 92 103Z" fill="${c}"/><path d="M60 75 L60 101" stroke="#302f2a" stroke-width="4"/><path d="M42 82 Q60 91 78 82" fill="none" stroke="#302f2a" stroke-width="3"/></svg>`}
+function renderPeople(){document.getElementById('peopleList').innerHTML=people.map(p=>`<div class="card"><div class="detail"><div class="portrait">${portrait(p[0],p[3])}</div><div><h3>${p[0]}</h3><span class="tag">${p[1]}</span><p class="muted">${p[2]}</p><button class="btn" onclick="alert('${p[0]}\n\n時代：${p[1]}\n\n要点：${p[2]}')">📜 1分解説</button></div></div></div>`).join('')}
+function rosterAvatar(name,kind){
+  const palettes=["#8f6d9e","#5f7893","#8a6f4d","#587c6a","#9c5f63","#6e6b99","#9a7c55","#617985"];
+  let h=0; for(const ch of name) h=(h*31+ch.charCodeAt(0))>>>0;
+  const c=palettes[h%palettes.length];
+  const accent=kind==="太刀"?"#dfc67e":kind==="短刀"?"#b8a2d0":kind==="脇差"?"#82a6b6":kind==="打刀"?"#a87f72":"#8aa27f";
+  return `<svg viewBox="0 0 120 140" aria-label="${name}のオリジナル学習用ミニ立ち絵">
+  <rect x="4" y="4" width="112" height="132" rx="25" fill="#171a1d" stroke="${c}" stroke-width="4"/>
+  <path d="M25 119 Q30 78 60 74 Q90 78 95 119Z" fill="${c}"/>
+  <circle cx="60" cy="45" r="22" fill="#f0c7a5"/>
+  <path d="M36 40 Q60 12 84 40 Q72 28 48 36 Q41 39 36 40Z" fill="#202328"/>
+  <circle cx="52" cy="46" r="3" fill="#222"/><circle cx="68" cy="46" r="3" fill="#222"/>
+  <path d="M53 57 Q60 63 67 57" fill="none" stroke="#7a4e43" stroke-width="2"/>
+  <path d="M60 76 L60 116" stroke="#2b2927" stroke-width="4"/>
+  <path d="M43 87 Q60 95 77 87" fill="none" stroke="#2b2927" stroke-width="3"/>
+  <path d="M28 119 L42 91 M92 119 L78 91" stroke="${accent}" stroke-width="4"/>
+  </svg>`;
+}
+function renderSwords(){
+  const q=(document.getElementById("swordSearch")?.value||"").trim().toLowerCase();
+  const t=document.getElementById("swordType")?.value||"";
+  const filtered=FULL_ROSTER.filter(x=>(!q||x[0].toLowerCase().includes(q))&&(!t||x[1]===t));
+  document.getElementById("swordCount").textContent=`${filtered.length} / 128`;
+  const detailed=new Map(swords.map(s=>[s[0],s]));
+  document.getElementById("swordList").innerHTML=filtered.map(([name,kind])=>{
+    const d=detailed.get(name);
+    const era=d?d[1]:"歴史・刀工文化";
+    const maker=d?d[2]:kind;
+    const info=d?d[3]:"歴史学習では、刀工・刀派・伝来・所蔵・逸話を分けて確認する。";
+    const theme=d?d[4]:"刀工・伝来・所蔵・逸話";
+    return `<div class="card">
+      <div class="detail">
+        <div class="portrait" style="width:78px;height:92px">${rosterAvatar(name,kind)}</div>
+        <div>
+          <h3>${name}</h3>
+          <span class="tag">${kind}</span><span class="tag">${era}</span><span class="tag">${maker}</span>
+          <p class="muted">${info}</p>
+          <div class="notice">📚 学習テーマ：${theme}${d?`<br>✨ 詳細登録済み`:"<br>📝 詳細史実メモは順次追加"}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join("") || '<div class="muted">該当する刀剣男士はいません。</div>';
+  const search=document.getElementById("swordSearch");
+  const type=document.getElementById("swordType");
+  if(search && !search.dataset.bound){search.addEventListener("input",renderSwords);search.dataset.bound="1";}
+  if(type && !type.dataset.bound){type.addEventListener("change",renderSwords);type.dataset.bound="1";}
+}
+function renderStats(){document.getElementById('statsList').innerHTML=subjects.map(s=>{let a=state.stats[s[0]],r=a[1]?Math.round(a[0]/a[1]*100):0;return `<div class="stat"><span>${s[0]}</span><b>${r}%（${a[0]} / ${a[1]}）</b></div>`}).join('');document.getElementById('achievements').innerHTML=state.ach.length?state.ach.map(a=>`<div class="review">🏆 ${a}</div>`).join(''):'<div class="muted">まだ実績なし。今日の任務へ！</div>'}
+function startDaily(){let names=subjects.map(x=>x[0]),done=0;function go(i){if(i>=names.length){state.xp+=done*15;state.koban+=done*15;setStreak();ach();save();tone(523,.08);alert('本日の任務終了！\n'+done+' / 5 教科を達成しました。');return}let sub=names[i],q=q5[sub][0],a=prompt(sub+'\n\n'+q[0]+'\n\n'+q[1].map((x,j)=>(j+1)+'：'+x).join('\n')+'\n\n番号を入力');if(Number(a)-1===q[2]){done++;state.stats[sub][0]++;tone(740,.08)}state.stats[sub][1]++;go(i+1)}go(0)}
+renderHome();renderStages();renderSubjects();renderSwords();renderPeople();renderStats();
+</script>
+</body></html>
